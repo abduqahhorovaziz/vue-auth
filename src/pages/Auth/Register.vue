@@ -38,7 +38,7 @@
         <span class="mb-2 inline-block font-medium">Website</span>
         <input
           :readonly="loading"
-          type="text"
+          type="url"
           id="website"
           v-model="form.website"
         />
@@ -63,9 +63,14 @@
 import { reactive, ref } from 'vue'
 
 import { useApi } from '@/composables/useApi.ts'
-import { IRegisterPayload } from '@/types/auth.ts'
+import { IAuthTokens, IRegisterPayload } from '@/types/auth.ts'
+import { catchError } from '@/utils/catch-error.ts'
+import { useAuthStore } from '@/store/auth.ts'
+import { useRouter } from 'vue-router'
 
 const $api = useApi()
+const $router = useRouter()
+const authStore = useAuthStore()
 
 const form = reactive<IRegisterPayload>({
   fullName: '',
@@ -79,9 +84,14 @@ const loading = ref(false)
 async function submit() {
   try {
     loading.value = true
+    const res = await $api.$post<IAuthTokens, IRegisterPayload>('/api/auth/register', form)
+    authStore.setTokens(res.data, true)
+    alert('Register successfully!')
+    $router.push({
+      name: 'Profile'
+    })
   } catch (err) {
-    console.log(err)
-    console.log(err.response)
+   catchError(err)
   } finally {
     loading.value = false
   }

@@ -10,6 +10,11 @@ export default [
         name: 'Index',
         component: () => import('@/pages/Index.vue'),
       },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('@/pages/Profile.vue'),
+      },
     ],
   },
   {

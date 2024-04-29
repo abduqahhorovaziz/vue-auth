@@ -5,3 +5,8 @@ export interface IRegisterPayload {
   website?: string | null
   about?: string | null
 }
+
+export interface IAuthTokens{
+  accessToken: string
+  refreshToken: string
+}
